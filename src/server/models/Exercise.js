@@ -23,6 +23,11 @@ const exerciseSchema = new Schema({
     },
   ],
   reactions: [Reaction.schema],
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true,
+  },
 });
 
 const Exercise = mongoose.model("Exercise", exerciseSchema);
