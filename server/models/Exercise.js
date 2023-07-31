@@ -22,10 +22,10 @@ const exerciseSchema = new Schema({
       },
     },
   ],
-  reactions: [Reaction.schema],
+  //reactions: [Reaction.schema],
   category: {
     type: Schema.Types.ObjectId,
-    ref: 'Category',
+    ref: "Category",
     required: true,
   },
 });
