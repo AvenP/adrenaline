@@ -3,6 +3,11 @@ const { Schema } = mongoose;
 const workoutSchema = new Schema({
   workoutName: { type: String, required: true },
   description: { type: String },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: (timestamp) => dateFormat(timestamp),
+  },
   exercises: [
     {
       type: Schema.Type.ObjectId,
