@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const Workout = require("./Workout");
 const userSchema = new Schema({
   name: { type: String, required: true, trim: true },
   userName: { type: String, required: true, trim: true },

@@ -3,6 +3,12 @@ const { Schema } = mongoose;
 const workoutSchema = new Schema({
   workoutName: { type: String, required: true },
   description: { type: String },
+  exercises: [
+    {
+      type: Schema.Type.ObjectId,
+      ref: Exercise,
+    },
+  ],
   comments: [
     {
       commentText: {
@@ -22,7 +28,7 @@ const workoutSchema = new Schema({
       },
     },
   ],
-  reactions: [Reaction.schema],
+  //reactions: [Reaction.schema],
 });
 
 const Workout = mongoose.model("Workout", workoutSchema);

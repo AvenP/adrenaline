@@ -1,5 +1,5 @@
-const {gql} = require("apollo-server-express")
-const typeDefs = gql `
+const { gql } = require("apollo-server-express");
+const typeDefs = gql`
     type Category {
         _id: ID
         categoryName: String
@@ -10,7 +10,7 @@ const typeDefs = gql `
         description: String
         category: Category
         comments: [Comment]
-        reactions: [Reaction]
+        # reactions: [Reaction]
     }
     type User{
         _id: ID
@@ -23,8 +23,9 @@ const typeDefs = gql `
         _id: ID
         workoutName: String
         description: String
+        exercises: [Exercise]
         comments: [Comment]
-        reactions: [Reaction]
+        # reactions: [Reaction]
     }
     type Query{
         categories: [Category]
@@ -36,32 +37,25 @@ const typeDefs = gql `
     }
     type Mutation{
         addUser(
-            firstName: String!
-            lastName: String!
-            email: String!
-            password: String!
+            firstName: String!,
+            lastName: String!,
+            email: String!,
+            password: String!,
           ): Auth
+        updateUser(
+            firstName: String,
+            lastName: String,
+            email: String,
+            password: String,
+        ): User
+        login(email: String!, password: String!): Auth
+        addExercise():Exercise
+        addCategory():Category
+        addWorkout():Workout
+        updateExercise():Exercise
+        updateCategory():Category
+        updateWorkout():Workout
     }
-    updateUser(
-        firstName: String
-        lastName: String
-        email: String
-        password: String
-      ): User
-    }
-    login(email: String!, password: String!): Auth
-  }
-    addExercise():Exercise
-    addCategory():Category
-    addWorkout():Workout
-    updateExercise():Exercise
-    updateCategory():Category
-    updateWorkout():Workout
-
 `;
 
-module.exports = typeDefs
-
-
-
-
+module.exports = typeDefs;
