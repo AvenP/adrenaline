@@ -81,17 +81,20 @@ const resolvers = {
       return { token, user };
     },
     //addExercise needs work
-    addExercise: async (parent, args, { category }, context) => {
+    addExercise: async (parent, args, context) => {
       if (context.user) {
-        const exercise = new Exercise();
-
-        await Category.findByIdandUpdate(category._id, {
-          $push: { exercises: exercise },
-        });
+        const exercise = await Exercise.create(args); //check returned data
 
         return exercise;
       }
       throw new AuthenticationError("Not logged in");
+    },
+    addCategory: async (parent, args, context) => {
+      if (context.user) {
+        const category = await Category.create(args);
+
+        return category;
+      }
     },
     addWorkout: async (parent, { exercises }, context) => {
       console.log(context);
@@ -103,6 +106,30 @@ const resolvers = {
         });
 
         return workout;
+      }
+      throw new AuthenticationError("Not logged in");
+    },
+    updateExercise: async (parent, args, context) => {
+      if (context.user) {
+        return await Exercise.findByIdAndUpdate(exercise._id, args, {
+          new: true,
+        });
+      }
+      throw new AuthenticationError("Not logged in");
+    },
+    updateCategory: async (parent, args, context) => {
+      if (context.user) {
+        return await Category.findByIdAndUpdate(category._id, args, {
+          new: true,
+        });
+      }
+      throw new AuthenticationError("Not logged in");
+    },
+    updateWorkout: async (parent, args, context) => {
+      if (context.user) {
+        return await Workout.findByIdAndUpdate(workout._id, args, {
+          new: true,
+        });
       }
       throw new AuthenticationError("Not logged in");
     },
