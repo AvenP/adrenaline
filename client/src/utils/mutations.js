@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const LOGIN_USER = gql`
   mutation login($email: String!, $password: String!) {
@@ -24,7 +24,20 @@ export const ADD_USER = gql`
   }
 `;
 
-
+export const ADD_WORKOUT = gql`
+mutation addWorkout( exercises: $exercise ){
+  addWorkout(exercises: $exercise) {
+    createdAt
+    exercises {
+      _id
+      exerciseName
+      description
+      category{
+        name
+      }
+    }
+  }
+}`;
 
 // export const ADD_COMMENT = gql`
 //   mutation addComment($thoughtId: ID!, $commentText: String!) {
