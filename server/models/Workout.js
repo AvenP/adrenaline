@@ -1,16 +1,18 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const Exercise = require ("./Exercise")
+
 const workoutSchema = new Schema({
   workoutName: { type: String, required: true },
   description: { type: String },
   createdAt: {
     type: Date,
     default: Date.now,
-    get: (timestamp) => dateFormat(timestamp),
+    // get: (timestamp) => dateFormat(timestamp),
   },
   exercises: [
     {
-      type: Schema.Type.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: Exercise,
     },
   ],
@@ -29,7 +31,7 @@ const workoutSchema = new Schema({
       createdAt: {
         type: Date,
         default: Date.now,
-        get: (timestamp) => dateFormat(timestamp),
+        // get: (timestamp) => dateFormat(timestamp),
       },
     },
   ],
