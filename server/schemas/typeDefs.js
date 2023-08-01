@@ -4,6 +4,12 @@ const typeDefs = gql`
     _id: ID
     categoryName: String
   }
+  type Comment {
+    _id: ID
+    commentAuthor: String
+    commentText: String
+    createdAt: Date
+  }
   type Exercise {
     _id: ID
     exerciseName: String
@@ -19,10 +25,15 @@ const typeDefs = gql`
     email: String
     workouts: [Workout]
   }
+  type Auth {
+    token: ID
+    user: User
+  }
   type Workout {
     _id: ID
     workoutName: String
     description: String
+    createdAt: Date
     exercises: [Exercise]
     comments: [Comment]
     # reactions: [Reaction]
@@ -60,7 +71,11 @@ const typeDefs = gql`
       description: String
       exercises: [Exercise]
     ): Workout
-    # addComment()
+    addComment(
+      workoutId: ID!
+      commentText: String!
+      commentAuthor: String!
+    ): Workout
     updateExercise(
       exerciseName: String!
       description: String
@@ -72,6 +87,9 @@ const typeDefs = gql`
       description: String
       exercises: [Exercise]
     ): Workout
+    removeCategory(categoryId: ID!): Category
+    removeWorkout(workoutId: ID!): Workout
+    removeComment(workoutId: ID!, commentId: ID!): Workout
   }
 `;
 

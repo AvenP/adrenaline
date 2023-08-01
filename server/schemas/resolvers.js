@@ -109,6 +109,18 @@ const resolvers = {
       }
       throw new AuthenticationError("Not logged in");
     },
+    addComment: async (parent, { workoutId, commentText, commentAuthor }) => {
+      return Workout.findOneAndUpdate(
+        { _id: workoutId },
+        {
+          $addToSet: { comments: { commentText, commentAuthor } },
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+    },
     updateExercise: async (parent, args, context) => {
       if (context.user) {
         return await Exercise.findByIdAndUpdate(exercise._id, args, {
