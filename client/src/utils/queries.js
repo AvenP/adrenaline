@@ -86,15 +86,15 @@ export const QUERY_WORKOUTS = gql`
 `;
 
 export const QUERY_SINGLE_WORKOUT = gql`
-query workout($workout: ID}{
-  workout{
-    _id
-    workoutName
-    description
-    exercises {
+  query workout($workout: ID) {
+    workout(_id: $workout) {
       _id
-      exerciseName
+      workoutName
+      description
+      exercises {
+        _id
+        exerciseName
+      }
     }
   }
-
-} `;
+`;
