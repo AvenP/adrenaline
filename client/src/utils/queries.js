@@ -4,7 +4,6 @@ export const QUERY_USER = gql`
   query user($username: String!) {
     user(username: $username) {
       _id
-      name
       username
       email
       workouts {
@@ -15,7 +14,6 @@ export const QUERY_USER = gql`
         exercises {
           _id
           exerciseName
-          description
         }
       }
     }
@@ -72,3 +70,31 @@ export const QUERY_ME = gql`
     }
   }
 `;
+
+export const QUERY_WORKOUTS = gql`
+  {
+    workouts {
+      _id
+      workoutName
+      description
+      exercises {
+        _id
+        exerciseName
+      }
+    }
+  }
+`;
+
+export const QUERY_SINGLE_WORKOUT = gql`
+query workout($workout: ID}{
+  workout{
+    _id
+    workoutName
+    description
+    exercises {
+      _id
+      exerciseName
+    }
+  }
+
+} `;
