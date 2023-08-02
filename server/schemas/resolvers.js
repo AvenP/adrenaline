@@ -1,7 +1,6 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { User, Category, Exercise, Workout } = require("../models");
 const { signToken } = require("../utils/auth");
-//const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 const resolvers = {
   Query: {
@@ -123,7 +122,7 @@ const resolvers = {
     },
     updateExercise: async (parent, args, context) => {
       if (context.user) {
-        return await Exercise.findByIdAndUpdate(exercise._id, args, {
+        return await Exercise.findByIdAndUpdate(Exercise._id, args, {
           new: true,
         });
       }
@@ -131,7 +130,7 @@ const resolvers = {
     },
     updateCategory: async (parent, args, context) => {
       if (context.user) {
-        return await Category.findByIdAndUpdate(category._id, args, {
+        return await Category.findByIdAndUpdate(Category._id, args, {
           new: true,
         });
       }
@@ -139,7 +138,7 @@ const resolvers = {
     },
     updateWorkout: async (parent, args, context) => {
       if (context.user) {
-        return await Workout.findByIdAndUpdate(workout._id, args, {
+        return await Workout.findByIdAndUpdate(Workout._id, args, {
           new: true,
         });
       }

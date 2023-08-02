@@ -8,7 +8,7 @@ const typeDefs = gql`
     _id: ID
     commentAuthor: String
     commentText: String
-    createdAt: Date
+    createdAt: String
   }
   type Exercise {
     _id: ID
@@ -33,7 +33,7 @@ const typeDefs = gql`
     _id: ID
     workoutName: String
     description: String
-    createdAt: Date
+    createdAt: String
     exercises: [Exercise]
     comments: [Comment]
     # reactions: [Reaction]
