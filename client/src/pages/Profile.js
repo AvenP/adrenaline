@@ -65,8 +65,8 @@ const Profile = () => {
 
 export default Profile;
 
-import React from "react";
-import { useQuery } from "@apollo/client";
+// import React from "react";
+// import { useQuery } from "@apollo/client";
 
 // const Profile = () => {
 //   //const
