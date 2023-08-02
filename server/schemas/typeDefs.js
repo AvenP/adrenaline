@@ -20,8 +20,7 @@ const typeDefs = gql`
   }
   type User {
     _id: ID
-    name: String
-    nameUser: String
+    userName: String
     email: String
     workouts: [Workout]
   }
@@ -47,29 +46,17 @@ const typeDefs = gql`
     workouts(user: ID, name: String): [Workout]
   }
   type Mutation {
-    addUser(
-      firstName: String!
-      lastName: String!
-      email: String!
-      password: String!
-    ): Auth
-    updateUser(
-      firstName: String
-      lastName: String
-      email: String
-      password: String
-    ): User
+    addUser(userName: String!, email: String!, password: String!): Auth
+    updateUser(userName: String, email: String, password: String): User
     login(email: String!, password: String!): Auth
     addExercise(
       exerciseName: String!
-      description: String
-      category: Category
+      description: String # category: Category
     ): Exercise
     addCategory(categoryName: String!): Category
     addWorkout(
       workoutName: String
-      description: String
-      exercises: [Exercise]
+      description: String # exercises: [Exercise]
     ): Workout
     addComment(
       workoutId: ID!
@@ -78,14 +65,12 @@ const typeDefs = gql`
     ): Workout
     updateExercise(
       exerciseName: String!
-      description: String
-      category: Category
+      description: String # category: Category
     ): Exercise
     updateCategory(categoryName: String!): Category
     updateWorkout(
       workoutName: String
-      description: String
-      exercises: [Exercise]
+      description: String # exercises: [Exercise]
     ): Workout
     removeCategory(categoryId: ID!): Category
     removeWorkout(workoutId: ID!): Workout
