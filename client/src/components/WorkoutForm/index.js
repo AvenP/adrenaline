@@ -11,6 +11,8 @@ const WorkoutForm = () => {
   const [workoutText, setWorkoutText] = useState("");
   const [selectedExercise, setSelectedExercise] = useState("");
   const [selectedRestTime, setSelectedRestTime] = useState("");
+  const [repDuration, setRepDuration] = useState("");
+  const [untilFailure, setUntilFailure] = useState(false);
   const [workoutList, setWorkoutList] = useState([]);
 
   const [characterCount, setCharacterCount] = useState(0);
@@ -44,7 +46,17 @@ const WorkoutForm = () => {
     event.preventDefault();
 
     // Create a new exercise item with the selected exercise and rest time
-    const exerciseItem = `${selectedExercise} - Rest Time: ${selectedRestTime}\n`;
+    let exerciseItem = `${selectedExercise} - Rest Time: ${selectedRestTime}`;
+
+    // Append the rep duration to the exercise item if specified
+    if (repDuration && !untilFailure) {
+      exerciseItem += ` - Reps: ${repDuration}`;
+    } else if (untilFailure) {
+      exerciseItem += " - Reps: Until Failure";
+    }
+
+    // Append a new line character to separate exercises
+    exerciseItem += "\n";
 
     // Update the workout list with the new exercise item
     setWorkoutList([...workoutList, exerciseItem]);
@@ -52,9 +64,11 @@ const WorkoutForm = () => {
     // Update the workout text with the complete workout list
     setWorkoutText(workoutText + exerciseItem);
 
-    // Clear the selected exercise and rest time
+    // Clear the selected exercise, rest time, rep duration, and untilFailure
     setSelectedExercise("");
     setSelectedRestTime("");
+    setRepDuration("");
+    setUntilFailure(false);
   };
 
   useEffect(() => {
@@ -107,6 +121,33 @@ const WorkoutForm = () => {
                 <option value="10 minutes">10 minutes</option>
                 <option value="until failure">Until Failure</option>
               </select>
+            </div>
+
+            <div className="col-12 col-lg-3">
+              <label htmlFor="repDuration">Rep Duration:</label>
+              <div className="flex-row">
+                <input
+                  type="number"
+                  name="repDuration"
+                  placeholder="Enter rep duration"
+                  value={repDuration}
+                  className="form-input"
+                  onChange={(e) => {
+                    setUntilFailure(false);
+                    setRepDuration(e.target.value);
+                  }}
+                />
+                <label htmlFor="untilFailure">Until Failure:</label>
+                <input
+                  type="checkbox"
+                  name="untilFailure"
+                  checked={untilFailure}
+                  onChange={(e) => {
+                    setUntilFailure(e.target.checked);
+                    setRepDuration("");
+                  }}
+                />
+              </div>
             </div>
 
             <div className="col-12 col-lg-3">
