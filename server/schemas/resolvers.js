@@ -85,9 +85,9 @@ const resolvers = {
       if (context.user) {
         const exercise = await Exercise.create(args); //check returned data
 
-        await Category.findOneAndUpdate({
-          $addToSet: { exercises: exercise._id },
-        });
+        // await Category.findOneAndUpdate({
+        //   $addToSet: { exercises: exercise._id },
+        // });
         return exercise;
       }
       throw new AuthenticationError("Not logged in");
