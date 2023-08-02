@@ -48,7 +48,7 @@ const resolvers = {
       throw new AuthenticationError("Not logged in!");
     },
   },
-  Mutations: {
+  Mutation: {
     addUser: async (parent, args) => {
       const user = await User.create(args);
       const token = signToken(user);
@@ -85,6 +85,9 @@ const resolvers = {
       if (context.user) {
         const exercise = await Exercise.create(args); //check returned data
 
+        await Category.findOneAndUpdate({
+          $addToSet: { exercises: exercise._id },
+        });
         return exercise;
       }
       throw new AuthenticationError("Not logged in");
@@ -123,7 +126,7 @@ const resolvers = {
     },
     updateExercise: async (parent, args, context) => {
       if (context.user) {
-        return await Exercise.findByIdAndUpdate(exercise._id, args, {
+        return await Exercise.findByIdAndUpdate(args, {
           new: true,
         });
       }
@@ -131,7 +134,7 @@ const resolvers = {
     },
     updateCategory: async (parent, args, context) => {
       if (context.user) {
-        return await Category.findByIdAndUpdate(category._id, args, {
+        return await Category.findByIdAndUpdate(args, {
           new: true,
         });
       }
@@ -139,7 +142,7 @@ const resolvers = {
     },
     updateWorkout: async (parent, args, context) => {
       if (context.user) {
-        return await Workout.findByIdAndUpdate(workout._id, args, {
+        return await Workout.findByIdAndUpdate(args, {
           new: true,
         });
       }
