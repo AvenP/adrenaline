@@ -25,7 +25,7 @@ export const ADD_USER = gql`
 `;
 
 export const ADD_WORKOUT = gql`
-mutation addWorkout( exercises: $exercise ){
+mutation addWorkout($exercise: [ID]!) {
   addWorkout(exercises: $exercise) {
     workoutName
     description
@@ -34,24 +34,27 @@ mutation addWorkout( exercises: $exercise ){
       _id
       exerciseName
       description
-      category{
+      category {
         categoryName
       }
     }
   }
-}`;
+}
+`;
+
 
 export const ADD_EXERCISE = gql`
-mutation addExercise( exercises: $exercise ){
-  addExercise(exercises: $exercise) {
-    exerciseName
-    description
-    category {
-      categoryName
+  mutation addExercise($exercise: ExerciseInput!) {
+    addExercise(exercise: $exercise) {
+      exerciseName
+      description
+      category {
+        categoryName
+      }
+      # comment
     }
-    # comment
   }
-}`;
+`;
 
 // export const ADD_COMMENT = gql`
 //   mutation addComment(

@@ -46,7 +46,7 @@ export const QUERY_EXERCISES = gql`
   query getExercises($category: ID) {
     exercises(category: $category) {
       _id
-      name
+      exerciseName
       description
       category {
         _id
