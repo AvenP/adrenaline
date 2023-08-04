@@ -12,7 +12,7 @@ const Footer = () => {
             className="btn btn-dark mb-3"
             onClick={() => navigate(-1)}
           >
-            &larr; Go Back
+            &larr; Back to the home GYM BRO
           </button>
         )}
         <h4>
