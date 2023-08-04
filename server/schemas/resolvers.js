@@ -1,6 +1,8 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { User, Category, Exercise, Workout } = require("../models");
 const { signToken } = require("../utils/auth");
+const bcrypt = require('bcrypt');
+
 
 const resolvers = {
   Query: {
@@ -49,35 +51,55 @@ const resolvers = {
   },
   Mutation: {
     addUser: async (parent, args) => {
-      const user = await User.create(args);
-      const token = signToken(user);
+      try {
+        const { username, email, password } = args;
 
-      return { token, user };
-    },
-    updateUser: async (parent, args, context) => {
-      if (context.user) {
-        return await User.findByIdAndUpdate(context.user._id, args, {
-          new: true,
+        // Hash the user's password before saving to the database
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create the user with the hashed password
+        const user = await User.create({
+          username,
+          email,
+          password: hashedPassword,
         });
+
+        // Generate a token for the new user
+        const token = signToken(user);
+
+        return { token, user };
+      } catch (error) {
+        console.error(error);
+        throw new Error('An error occurred during user registration');
       }
-      throw new AuthenticationError("Not logged in");
     },
+
+    updateUser: async (parent, args, context) => {
+    },
+
     login: async (parent, { email, password }) => {
-      const user = await User.findOne({ email });
+      try {
+        const user = await User.findOne({ email });
 
-      if (!user) {
-        throw new AuthenticationError("Incorrect credentials");
+        if (!user) {
+          throw new AuthenticationError("User not found");
+        }
+
+        // Compare the entered password with the hashed password in the database
+        const correctPw = await bcrypt.compare(password, user.password);
+
+        if (!correctPw) {
+          throw new AuthenticationError("Incorrect password");
+        }
+
+        // If the password is correct, generate a token for the user
+        const token = signToken(user);
+
+        return { token, user };
+      } catch (err) {
+        console.error(err); // Log the error to the console
+        throw new AuthenticationError("An error occurred during login");
       }
-
-      const correctPw = await user.isCorrectPassword(password);
-
-      if (!correctPw) {
-        throw new AuthenticationError("Incorrect credentials");
-      }
-
-      const token = signToken(user);
-
-      return { token, user };
     },
     //addExercise needs work
     addExercise: async (parent, args, context) => {
