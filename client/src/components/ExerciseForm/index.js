@@ -3,15 +3,28 @@ import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 
 import { ADD_EXERCISE } from "../../utils/mutations";
-import { QUERY_EXERCISES, QUERY_ME } from "../../utils/queries";
+import {
+  QUERY_EXERCISES,
+  QUERY_ME,
+  QUERY_CATEGORIES,
+} from "../../utils/queries";
 
 import Auth from "../../utils/auth";
 
 const ExerciseForm = () => {
-  const [exerciseText, setExerciseText] = useState("");
-  const [exerciseType, setExerciseType] = useState("");
-  const [targetArea, setTargetArea] = useState("");
+  // const [exerciseText, setExerciseText] = useState("");
+  // const [exerciseType, setExerciseType] = useState("");
+  // const [targetArea, setTargetArea] = useState("");
+  const [description, setDescription] = useState("");
+  const [exerciseName, setExerciseName] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
+  const [category, setCategory] = useState("");
+
+  // grab QUERY_CATEGORIES
+
+  // const { categories } = state;
+
+  // const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES);
 
   const [addExercise, { error }] = useMutation(ADD_EXERCISE, {
     update(cache, { data: { addExercise } }) {
@@ -41,16 +54,16 @@ const ExerciseForm = () => {
     try {
       const { data } = await addExercise({
         variables: {
-            exerciseText,
-          exerciseType,
-          targetArea,
+          exerciseName,
+          description,
+          category,
           exerciseAuthor: Auth.getProfile().data.username,
         },
       });
 
-      setExerciseText("");
-      setExerciseType("");
-      setTargetArea("");
+      setExerciseName("");
+      setDescription("");
+      setCategory("");
     } catch (err) {
       console.error(err);
     }
@@ -59,8 +72,8 @@ const ExerciseForm = () => {
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    if (name === "exerciseText" && value.length <= 500) {
-      setExerciseText(value);
+    if (name === "description" && value.length <= 500) {
+      setDescription(value);
       setCharacterCount(value.length);
     }
   };
@@ -82,13 +95,13 @@ const ExerciseForm = () => {
             className="flex-row justify-center justify-space-between-md align-center"
             onSubmit={handleFormSubmit}
           >
-            <div className="col-12 col-lg-3">
-              <label htmlFor="exerciseType">Exercise Type:</label>
+            {/* <div className="col-12 col-lg-3">
+              <label htmlFor="exerciseName">Exercise Type:</label>
               <select
-                name="exerciseType"
-                value={exerciseType}
+                name="exerciseName"
+                value={exerciseName}
                 className="form-input"
-                onChange={(e) => setExerciseType(e.target.value)}
+                onChange={(e) => setExerciseName(e.target.value)}
               >
                 <option value="">Select an exercise type</option>
                 <option value="strength training">Strength Training</option>
@@ -96,17 +109,17 @@ const ExerciseForm = () => {
                 <option value="yoga">Yoga</option>
                 <option value="endurance">Endurance</option>
               </select>
-            </div>
+            </div> */}
 
             <div className="col-12 col-lg-3">
-              <label htmlFor="targetArea">Target Area:</label>
+              <label htmlFor="category">Category:</label>
               <select
-                name="targetArea"
-                value={targetArea}
+                name="category"
+                value={category}
                 className="form-input"
-                onChange={(e) => setTargetArea(e.target.value)}
+                onChange={(e) => setCategory(e.target.value)}
               >
-                <option value="">Select a target area</option>
+                <option value="">Select a Category</option>
                 <option value="Arms">Arms</option>
                 <option value="Legs">Legs</option>
                 <option value="Back">Back</option>
@@ -115,9 +128,9 @@ const ExerciseForm = () => {
             </div>
             <div className="col-12 col-lg-9">
               <textarea
-                name="exerciseText"
+                name="description"
                 placeholder="Here's a new way to get gainzzz..."
-                value={exerciseText}
+                value={description}
                 className="form-input w-100"
                 style={{ lineHeight: "1.5", resize: "vertical" }}
                 onChange={handleChange}

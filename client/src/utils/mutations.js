@@ -25,30 +25,38 @@ export const ADD_USER = gql`
 `;
 
 export const ADD_WORKOUT = gql`
-mutation addWorkout($exercise: [ID]!) {
-  addWorkout(exercises: $exercise) {
-    workoutName
-    description
-    createdAt
-    exercises {
-      _id
-      exerciseName
+  mutation addWorkout($exercise: [ID]!) {
+    addWorkout(exercises: $exercise) {
+      workoutName
       description
-      category {
-        categoryName
+      createdAt
+      exercises {
+        _id
+        exerciseName
+        description
+        category {
+          categoryName
+        }
       }
     }
   }
-}
 `;
 
-
 export const ADD_EXERCISE = gql`
-  mutation addExercise($exercise: ExerciseInput!) {
-    addExercise(exercise: $exercise) {
+  mutation addExercise(
+    $exerciseName: String
+    $description: String
+    $category: ID
+  ) {
+    addExercise(
+      exerciseName: $exerciseName
+      description: $description
+      category: $category
+    ) {
       exerciseName
       description
       category {
+        _id
         categoryName
       }
       # comment

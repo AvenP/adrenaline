@@ -16,7 +16,6 @@ const typeDefs = gql`
     description: String
     category: Category
     comments: [Comment]
-    # reactions: [Reaction]
   }
   type User {
     _id: ID
@@ -38,6 +37,7 @@ const typeDefs = gql`
     # reactions: [Reaction]
   }
   type Query {
+    me: User
     categories: [Category]
     exercises(category: ID, name: String): [Exercise]
     exercise(_id: ID): Exercise
@@ -51,12 +51,14 @@ const typeDefs = gql`
     login(email: String!, password: String!): Auth
     addExercise(
       exerciseName: String!
-      description: String # category: Category
+      description: String
+      category: ID!
     ): Exercise
     addCategory(categoryName: String!): Category
     addWorkout(
       workoutName: String
-      description: String # exercises: [Exercise]
+      description: String
+      exercises: [ID]!
     ): Workout
     addComment(
       workoutId: ID!
@@ -65,12 +67,14 @@ const typeDefs = gql`
     ): Workout
     updateExercise(
       exerciseName: String!
-      description: String # category: Category
+      description: String
+      category: ID
     ): Exercise
     updateCategory(categoryName: String!): Category
     updateWorkout(
       workoutName: String
-      description: String # exercises: [Exercise]
+      description: String
+      exercises: [ID]
     ): Workout
     removeCategory(categoryId: ID!): Category
     removeWorkout(workoutId: ID!): Workout

@@ -1,8 +1,7 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { User, Category, Exercise, Workout } = require("../models");
 const { signToken } = require("../utils/auth");
-const bcrypt = require('bcrypt');
-
+const bcrypt = require("bcrypt");
 
 const resolvers = {
   Query: {
@@ -26,6 +25,12 @@ const resolvers = {
     },
     exercise: async (parent, { _id }) => {
       return await Exercise.findById(_id).populate("category");
+    },
+    me: async (parent, args, context) => {
+      if (context.user) {
+        return User.findOne({ _id: context.user._id });
+      }
+      throw new AuthenticationError("You need to be logged in!");
     },
     user: async (parent, args, context) => {
       if (context.user) {
@@ -70,12 +75,11 @@ const resolvers = {
         return { token, user };
       } catch (error) {
         console.error(error);
-        throw new Error('An error occurred during user registration');
+        throw new Error("An error occurred during user registration");
       }
     },
 
-    updateUser: async (parent, args, context) => {
-    },
+    updateUser: async (parent, args, context) => {},
 
     login: async (parent, { email, password }) => {
       try {
@@ -106,9 +110,16 @@ const resolvers = {
       if (context.user) {
         const exercise = await Exercise.create(args); //check returned data
 
-        // await Category.findOneAndUpdate({
-        //   $addToSet: { exercises: exercise._id },
-        // });
+        // addExercise: async (parent, args, context) => {
+        //   if (context.user) {
+        //     const { exerciseName, description, category, categoryName } = args;
+
+        //     const exercise = await Exercise.create({
+        //       exerciseName,
+        //       description,
+        //       category,
+        //       categoryName,
+        //     });
         return exercise;
       }
       throw new AuthenticationError("Not logged in");
@@ -147,9 +158,7 @@ const resolvers = {
     },
     updateExercise: async (parent, args, context) => {
       if (context.user) {
-
         return await Exercise.findByIdAndUpdate(Exercise._id, args, {
-
           new: true,
         });
       }
@@ -157,9 +166,7 @@ const resolvers = {
     },
     updateCategory: async (parent, args, context) => {
       if (context.user) {
-
         return await Category.findByIdAndUpdate(Category._id, args, {
-
           new: true,
         });
       }
@@ -167,9 +174,7 @@ const resolvers = {
     },
     updateWorkout: async (parent, args, context) => {
       if (context.user) {
-
         return await Workout.findByIdAndUpdate(Workout._id, args, {
-
           new: true,
         });
       }
