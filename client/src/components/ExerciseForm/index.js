@@ -1,81 +1,51 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 
 import { ADD_EXERCISE } from "../../utils/mutations";
-import {
-  QUERY_EXERCISES,
-  QUERY_ME,
-  QUERY_CATEGORIES,
-} from "../../utils/queries";
+import { QUERY_CATEGORIES } from "../../utils/queries";
 
 import Auth from "../../utils/auth";
 
 const ExerciseForm = () => {
-  // const [exerciseText, setExerciseText] = useState("");
-  // const [exerciseType, setExerciseType] = useState("");
-  // const [targetArea, setTargetArea] = useState("");
-  const [description, setDescription] = useState("");
-  const [exerciseName, setExerciseName] = useState("");
-  const [characterCount, setCharacterCount] = useState(0);
-  const [category, setCategory] = useState("");
+  //const [characterCount, setCharacterCount] = useState(0);
 
-  // grab QUERY_CATEGORIES
-
-  // const { categories } = state;
-
-  // const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES);
-
-  const [addExercise, { error }] = useMutation(ADD_EXERCISE, {
-    update(cache, { data: { addExercise } }) {
-      try {
-        const { exercises } = cache.readQuery({ query: QUERY_EXERCISES });
-
-        cache.writeQuery({
-          query: QUERY_EXERCISES,
-          data: { exercises: [addExercise, ...exercises] },
-        });
-      } catch (e) {
-        console.error(e);
-      }
-
-      // update me object's cache
-      const { me } = cache.readQuery({ query: QUERY_ME });
-      cache.writeQuery({
-        query: QUERY_ME,
-        data: { me: { ...me, exercises: [...me.exercises, addExercise] } },
-      });
-    },
+  const [formData, setFormData] = useState({
+    exerciseName: "",
+    category: "",
+    description: "",
   });
+  const [
+    createExercise,
+    { loading: createExerciseLoading, error: mutationErr },
+  ] = useMutation(ADD_EXERCISE);
+  const { loading: categoryLoading, data: categoriesData } =
+    useQuery(QUERY_CATEGORIES);
+  console.log("categoriesData", categoriesData);
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      const { data } = await addExercise({
-        variables: {
-          exerciseName,
-          description,
-          category,
-          exerciseAuthor: Auth.getProfile().data.username,
-        },
+  //
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createExercise({
+      variables: {
+        ...formData,
+      },
+    })
+      .then((result) => {
+        console.log("exercise created", result.data);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log("exercise create err", err);
       });
-
-      setExerciseName("");
-      setDescription("");
-      setCategory("");
-    } catch (err) {
-      console.error(err);
-    }
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-
-    if (name === "description" && value.length <= 500) {
-      setDescription(value);
-      setCharacterCount(value.length);
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevformdata) => ({
+      ...prevformdata,
+      [name]: value,
+    }));
   };
 
   return (
@@ -84,69 +54,66 @@ const ExerciseForm = () => {
 
       {Auth.loggedIn() ? (
         <>
-          <p
+          {/* <p
             className={`m-0 ${
               characterCount === 500 || error ? "text-danger" : ""
             }`}
           >
             Character Count: {characterCount}/500
-          </p>
+          </p> */}
           <form
-            className="flex-row justify-center justify-space-between-md align-center"
-            onSubmit={handleFormSubmit}
+            className="exerciseForm flex-row justify-center justify-space-between-md align-center"
+            onSubmit={handleSubmit}
           >
-            {/* <div className="col-12 col-lg-3">
-              <label htmlFor="exerciseName">Exercise Type:</label>
+            <div className="col-12 col-lg-3 d-flex flex">
+              <label htmlFor="category">Select a Category:</label>
               <select
-                name="exerciseName"
-                value={exerciseName}
-                className="form-input"
-                onChange={(e) => setExerciseName(e.target.value)}
-              >
-                <option value="">Select an exercise type</option>
-                <option value="strength training">Strength Training</option>
-                <option value="cardio">Cardio</option>
-                <option value="yoga">Yoga</option>
-                <option value="endurance">Endurance</option>
-              </select>
-            </div> */}
-
-            <div className="col-12 col-lg-3">
-              <label htmlFor="category">Category:</label>
-              <select
+                id="category"
                 name="category"
-                value={category}
+                value={formData.category}
                 className="form-input"
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={handleChange}
               >
                 <option value="">Select a Category</option>
-                <option value="Arms">Arms</option>
-                <option value="Legs">Legs</option>
-                <option value="Back">Back</option>
-                <option value="Chest">Chest</option>
+                {categoriesData?.categories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {category.categoryName}
+                  </option>
+                ))}
               </select>
-            </div>
-            <div className="col-12 col-lg-9">
-              <textarea
-                name="description"
-                placeholder="Here's a new way to get gainzzz..."
-                value={description}
-                className="form-input w-100"
-                style={{ lineHeight: "1.5", resize: "vertical" }}
-                onChange={handleChange}
-              ></textarea>
             </div>
 
             <div className="col-12 col-lg-3">
+              <label htmlFor="exerciseName">Exercise Name: </label>
+              <div className="flex-row">
+                <input
+                  type="text"
+                  id="exerciseName"
+                  name="exerciseName"
+                  value={formData.exerciseName}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className="col-12 col-lg-3">
+              <label>Description: </label>
+              <div className="flex-row">
+                <textarea
+                  type="text"
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className="col-12 col-lg-3 mt-2">
               <button className="btn btn-primary btn-block py-3" type="submit">
-                Add Exercise
+                Create Exercise
               </button>
             </div>
-            {error && (
-              <div className="col-12 my-3 bg-danger text-white p-3">
-                {error.message}
-              </div>
-            )}
           </form>
         </>
       ) : (

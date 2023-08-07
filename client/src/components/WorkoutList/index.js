@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const WorkoutList = ({
   workouts,
@@ -24,13 +24,13 @@ const WorkoutList = ({
                   to={`/profiles/${workout.workoutAuthor}`}
                 >
                   {workout.workoutAuthor} <br />
-                  <span style={{ fontSize: '1rem' }}>
+                  <span style={{ fontSize: "1rem" }}>
                     had this thought on these GAINZZZZ {workout.createdAt}
                   </span>
                 </Link>
               ) : (
                 <>
-                  <span style={{ fontSize: '1rem' }}>
+                  <span style={{ fontSize: "1rem" }}>
                     You had this sick pump on {workout.createdAt}
                   </span>
                 </>
