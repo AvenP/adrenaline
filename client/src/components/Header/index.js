@@ -1,9 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { QUERY_ME } from "../../utils/queries";
 
-import Auth from '../../utils/auth';
+import Auth from "../../utils/auth";
 
 const Header = () => {
+  const { data } = useQuery(QUERY_ME);
   const logout = (event) => {
     event.preventDefault();
     Auth.logout();
@@ -21,7 +24,10 @@ const Header = () => {
           {Auth.loggedIn() ? (
             <>
               <Link className="btn btn-lg btn-info m-2" to="/me">
-                {Auth.getProfile().data.username}'s profile
+                {!data || !data?.me || Object.keys(data?.me).length === 0
+                  ? null
+                  : data?.me?.username}
+                's profile
               </Link>
               <button className="btn btn-lg btn-light m-2" onClick={logout}>
                 Logout
@@ -29,9 +35,9 @@ const Header = () => {
               <Link className="btn btn-lg btn-success m-2" to="/">
                 Feed
               </Link>
-              <Link className="btn btn-lg btn-success m-2" to="/AddContent">
+              {/* <Link className="btn btn-lg btn-success m-2" to="/AddContent">
                 Add Content
-              </Link>
+              </Link> */}
             </>
           ) : (
             <>

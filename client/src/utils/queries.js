@@ -1,19 +1,32 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_USER = gql`
-  query user($username: String!) {
-    user(username: $username) {
+  query UserData($userId: ID!) {
+    userData(userId: $userId) {
       _id
-      username
       email
+      username
       workouts {
         _id
+        createdBy {
+          _id
+          username
+        }
         workoutName
         description
-        createAt
+        createdAt
         exercises {
           _id
-          exerciseName
+          repsPerSet
+          exercise {
+            _id
+            category {
+              _id
+              categoryName
+            }
+            exerciseName
+            description
+          }
         }
       }
     }
@@ -36,7 +49,8 @@ export const QUERY_ALL_EXERCISES = gql`
       exerciseName
       description
       category {
-        name
+        _id
+        categoryName
       }
     }
   }
@@ -75,25 +89,60 @@ export const QUERY_WORKOUTS = gql`
   {
     workouts {
       _id
+      createdBy {
+        _id
+        username
+      }
       workoutName
       description
+      createdAt
       exercises {
         _id
-        exerciseName
+        repsPerSet
+        exercise {
+          _id
+          category {
+            _id
+            categoryName
+          }
+          exerciseName
+          description
+        }
       }
     }
   }
 `;
 
 export const QUERY_SINGLE_WORKOUT = gql`
-  query workout($workout: ID) {
-    workout(_id: $workout) {
+  query workout($workoutId: ID) {
+    workout(workoutId: $workout) {
       _id
+      createdBy {
+        _id
+        username
+      }
       workoutName
       description
+      createdAt
       exercises {
         _id
-        exerciseName
+        repDuration
+        restTime
+        exercise {
+          _id
+          exerciseName
+          category {
+            _id
+            categoryName
+          }
+        }
+      }
+      comments {
+        _id
+        commentText
+        commentAuthor {
+          username
+        }
       }
     }
   }

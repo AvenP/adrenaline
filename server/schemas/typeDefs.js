@@ -27,6 +27,15 @@ const typeDefs = gql`
     token: ID
     user: User
   }
+  type WorkoutExercise {
+    _id: ID
+    exercise: Exercise
+    totalSets: String
+    repsPerSet: String
+    untilFailure: Boolean
+    repDuration: String
+    restTime: String
+  }
   type Workout {
     _id: ID
     workoutName: String
@@ -36,14 +45,23 @@ const typeDefs = gql`
     comments: [Comment]
     # reactions: [Reaction]
   }
+  input WorkoutExerciseInput {
+    exercise: ID!
+    totalSets: String
+    repsPerSet: String
+    untilFailure: Boolean
+    repDuration: String
+    restTime: String
+  }
   type Query {
     me: User
+    userData(userId: ID!): User
     categories: [Category]
     exercises(category: ID, name: String): [Exercise]
     exercise(_id: ID): Exercise
     user: User
-    workout(_id: ID): Workout
-    workouts(user: ID, name: String): [Workout]
+    workout(workoutId: ID): Workout
+    workouts: [Workout]
   }
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
@@ -66,19 +84,21 @@ const typeDefs = gql`
       commentAuthor: String!
     ): Workout
     updateExercise(
-      exerciseName: String!
+      exerciseName: String
       description: String
       category: ID
+      exerciseId: ID!
     ): Exercise
-    updateCategory(categoryName: String!): Category
+    updateCategory(categoryId: ID!, categoryName: String!): Category
     updateWorkout(
+      workoutId: ID!
       workoutName: String
       description: String
-      exercises: [ID]
+      exercises: [WorkoutExerciseInput]
     ): Workout
-    removeCategory(categoryId: ID!): Category
-    removeWorkout(workoutId: ID!): Workout
-    removeComment(workoutId: ID!, commentId: ID!): Workout
+    removeCategory(categoryId: ID!): String
+    removeWorkout(workoutId: ID!): String
+    removeComment(workoutId: ID!, commentId: ID!): String
   }
 `;
 

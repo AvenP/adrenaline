@@ -24,19 +24,31 @@ export const ADD_USER = gql`
   }
 `;
 
+export const ADD_CATEGORY = gql`
+  mutation addCategory($categoryName: String!) {
+    addCategory(categoryName: $categoryName) {
+      categoryName
+    }
+  }
+`;
+
 export const ADD_WORKOUT = gql`
-  mutation addWorkout($exercise: [ID]!) {
-    addWorkout(exercises: $exercise) {
+  mutation AddWorkout(
+    $workoutName: String!
+    $exercises: [WorkoutExerciseInput]!
+  ) {
+    addWorkout(workoutName: $workoutName, exercises: $exercises) {
+      _id
       workoutName
       description
       createdAt
       exercises {
         _id
-        exerciseName
-        description
-        category {
-          categoryName
-        }
+        repDuration
+        repsPerSet
+        restTime
+        totalSets
+        untilFailure
       }
     }
   }
@@ -53,6 +65,7 @@ export const ADD_EXERCISE = gql`
       description: $description
       category: $category
     ) {
+      _id
       exerciseName
       description
       category {
@@ -63,34 +76,11 @@ export const ADD_EXERCISE = gql`
   }
 `;
 
-export const ADD_CATEGORY = gql`
-  mutation addCategory($categoryName: String!) {
-    addCategory(categoryName: $categoryName) {
-      categoryName
+export const ADD_COMMENT = gql`
+  mutation AddComment($workoutId: ID!, $commentText: String!) {
+    addComment(workoutId: $workoutId, commentText: $commentText) {
+      _id
+      workoutName
     }
   }
 `;
-
-// export const ADD_COMMENT = gql`
-//   mutation addComment(
-//     $workoutId: ID!
-//     $commentText: String!
-//     $commentAuthor: String!
-//   ) {
-//     addComment(
-//       workoutId: $workoutId
-//       commentText: $commentText
-//       commentAuthor: $commentAuthor
-//     ) {
-//       _id
-//       description
-
-//       createdAt
-//       comments {
-//         _id
-//         commentText
-//         createdAt
-//       }
-//     }
-//   }
-// `;

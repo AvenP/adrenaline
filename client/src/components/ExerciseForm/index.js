@@ -15,6 +15,8 @@ const ExerciseForm = () => {
     category: "",
     description: "",
   });
+
+  const [characterCount, setCharacterCount] = useState(0);
   const [
     createExercise,
     { loading: createExerciseLoading, error: mutationErr },
@@ -29,6 +31,7 @@ const ExerciseForm = () => {
     createExercise({
       variables: {
         ...formData,
+        exerciseAuthor: Auth.getProfile().data.username,
       },
     })
       .then((result) => {
@@ -62,10 +65,10 @@ const ExerciseForm = () => {
             Character Count: {characterCount}/500
           </p> */}
           <form
-            className="exerciseForm flex-row justify-center justify-space-between-md align-center"
+            className="exerciseForm flex-row justify-center justify-space-between-md"
             onSubmit={handleSubmit}
           >
-            <div className="col-12 col-lg-3 d-flex flex">
+            <div className="col-12 col-lg-12">
               <label htmlFor="category">Select a Category:</label>
               <select
                 id="category"
@@ -83,26 +86,31 @@ const ExerciseForm = () => {
               </select>
             </div>
 
-            <div className="col-12 col-lg-3">
+            <div className="col-12 col-lg-12">
               <label htmlFor="exerciseName">Exercise Name: </label>
               <div className="flex-row">
                 <input
                   type="text"
                   id="exerciseName"
                   name="exerciseName"
+                  placeholder="Exercise Name"
+                  className="form-input w-20"
                   value={formData.exerciseName}
                   onChange={handleChange}
                 />
               </div>
             </div>
 
-            <div className="col-12 col-lg-3">
+            <div className="col-12 col-lg-12">
               <label>Description: </label>
               <div className="flex-row">
                 <textarea
                   type="text"
                   id="description"
                   name="description"
+                  placeholder="Here's a new way to get gainzzz..."
+                  className="form-input w-100"
+                  style={{ lineHeight: "1.5", resize: "vertical" }}
                   value={formData.description}
                   onChange={handleChange}
                 />
