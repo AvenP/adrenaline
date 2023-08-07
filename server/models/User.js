@@ -7,7 +7,6 @@ const userSchema = new Schema({
   username: { type: String, required: true, trim: true },
   email: { type: String, required: true, trim: true, unique: true },
   password: { type: String, required: true, trim: true, minLength: 8 },
-  workouts: [Workout.schema],
 });
 
 userSchema.methods.isCorrectPassword = async function (password) {

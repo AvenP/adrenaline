@@ -11,10 +11,17 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import Profile from "./pages/Profile";
+// import Profile from "./pages/Profile";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import AddContent from "./pages/AddContent";
+import ProfilePage from "./pages/ProfilePage";
+import AddCategory from "./pages/AddCategory";
+// import WorkoutDetail from "./pages/WorkoutDetail";
+// import Workout from "./pages/Workout";
+import AllWorkout from "./pages/AllWorkout";
+import AllExercises from "./pages/AllExercises";
+import AddWorkout from "./pages/AddWorkout";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -47,9 +54,13 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/me" element={<Profile />} />
-              <Route path="/profiles/:username" element={<Profile />} />
+              <Route path="/me" element={<ProfilePage />} />
+              <Route path="/add-workouts" element={<AddWorkout />} />
+              <Route path="/workouts" element={<AllWorkout />} />
+              <Route path="/exercise" element={<AllExercises />} />
+              {/* <Route path="/profiles/:username" element={<Profile />} /> */}
               <Route path="/AddContent" element={<AddContent />} />
+              <Route path="/AddCategory" element={<AddCategory />} />
             </Routes>
           </div>
           <Footer />

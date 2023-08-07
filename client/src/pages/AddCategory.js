@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ExerciseForm from "../components/ExerciseForm";
 import SideBar from "./SideBar";
+import CategoryForm from "../components/CategoryForm";
 
-const AddContent = () => {
+const AddCategory = () => {
   return (
     <div>
       <div className="flex-row justify-center">
@@ -18,11 +18,11 @@ const AddContent = () => {
           </Link>
 
           {/* Render the ExerciseForm */}
-          <ExerciseForm />
+          <CategoryForm />
         </div>
       </div>
     </div>
   );
 };
 
-export default AddContent;
+export default AddCategory;

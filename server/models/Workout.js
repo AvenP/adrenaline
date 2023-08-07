@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const Exercise = require ("./Exercise")
+const Exercise = require("./Exercise");
 
 const workoutSchema = new Schema({
+  createdBy: { type: Schema.Types.ObjectId, ref: "User" },
   workoutName: { type: String, required: true },
   description: { type: String },
   createdAt: {
@@ -12,8 +13,25 @@ const workoutSchema = new Schema({
   },
   exercises: [
     {
-      type: mongoose.Types.ObjectId,
-      ref: Exercise,
+      exercise: {
+        type: mongoose.Types.ObjectId,
+        ref: Exercise,
+      },
+      totalSets: {
+        type: String,
+      },
+      repsPerSet: {
+        type: String,
+      },
+      untilFailure: {
+        type: Boolean,
+      },
+      repDuration: {
+        type: String,
+      },
+      restTime: {
+        type: String,
+      },
     },
   ],
   comments: [

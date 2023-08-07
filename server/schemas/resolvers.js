@@ -8,14 +8,14 @@ const resolvers = {
     categories: async () => {
       return await Category.find();
     },
-    exercises: async (parent, { category, exerciseName }) => {
+    exercises: async (parent, { category, name }) => {
       const params = {};
 
       if (category) {
         params.category = category;
       }
 
-      if (exerciseName) {
+      if (name) {
         params.exerciseName = {
           $regex: exerciseName,
         };
@@ -28,7 +28,39 @@ const resolvers = {
     },
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id });
+        const user = await User.findOne({ _id: context.user._id });
+
+        const workouts = await Workout.find({
+          createdBy: user._id,
+        }).populate({
+          path: "exercises.exercise",
+          populate: {
+            path: "category",
+          },
+        });
+
+        user.workouts = workouts;
+
+        return user;
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
+    userData: async (parent, args, context) => {
+      if (context.user) {
+        const user = await User.findOne({ _id: args.userId });
+
+        const workouts = await Workout.find({
+          createdBy: user._id,
+        }).populate({
+          path: "exercises.exercise",
+          populate: {
+            path: "category",
+          },
+        });
+
+        user.workouts = workouts;
+
+        return user;
       }
       throw new AuthenticationError("You need to be logged in!");
     },
@@ -43,15 +75,35 @@ const resolvers = {
       }
       throw new AuthenticationError("Not logged in!");
     },
-    workout: async (parent, { _id }, context) => {
+    workout: async (parent, { workoutId }, context) => {
+      const findWorkout = await Workout.findById(workoutId)
+        .populate({
+          path: "exercises.exercise",
+          populate: {
+            path: "category",
+          },
+        })
+        .populate("comments.commentAuthor")
+        .populate("createdBy", "username");
+
+      return findWorkout;
+    },
+    workouts: async (parent, args, context) => {
+      const params = {};
       if (context.user) {
-        const user = User.findById(context.user._id).populate({
-          path: "workouts.exercises",
-          populate: "category",
-        });
-        return user.workouts.id(_id);
+        params.createdBy = context.user._id;
       }
-      throw new AuthenticationError("Not logged in!");
+      const findWorkout = await Workout.find(params)
+        .populate({
+          path: "exercises.exercise",
+          populate: {
+            path: "category",
+          },
+        })
+        .populate("createdBy", "username")
+        .populate("comments.commentAuthor");
+
+      return findWorkout;
     },
   },
   Mutation: {
@@ -91,11 +143,19 @@ const resolvers = {
 
         // Compare the entered password with the hashed password in the database
         const correctPw = await bcrypt.compare(password, user.password);
+        console.log(password, user.password);
 
         if (!correctPw) {
           throw new AuthenticationError("Incorrect password");
         }
+        const workouts = await Workout.find({ createdBy: user._id }).populate({
+          path: "exercises.exercise",
+          populate: {
+            path: "category",
+          },
+        });
 
+        user.workouts = workouts;
         // If the password is correct, generate a token for the user
         const token = signToken(user);
 
@@ -108,18 +168,14 @@ const resolvers = {
     //addExercise needs work
     addExercise: async (parent, args, context) => {
       if (context.user) {
-        const exercise = await Exercise.create(args); //check returned data
-        console.log("addexcercise", args);
-        // addExercise: async (parent, args, context) => {
-        //   if (context.user) {
-        //     const { exerciseName, description, category, categoryName } = args;
+        const { exerciseName, description, category } = args;
+        const exercise = await Exercise.create({
+          exerciseName,
+          description,
+          category,
+          comments: [],
+        }); //check returned data
 
-        //     const exercise = await Exercise.create({
-        //       exerciseName,
-        //       description,
-        //       category,
-        //       categoryName,
-        //     });
         return exercise;
       }
       throw new AuthenticationError("Not logged in");
@@ -131,52 +187,102 @@ const resolvers = {
         return category;
       }
     },
-    addWorkout: async (parent, { exercises }, context) => {
+    addWorkout: async (
+      parent,
+      { exercises, workoutName, description },
+      context
+    ) => {
       console.log(context);
       if (context.user) {
-        const workout = new Workout({ exercises });
-
-        await User.findByIdAndUpdate(context.user._id, {
-          $push: { workouts: workout },
+        const workout = await Workout.create({
+          exercises,
+          workoutName,
+          description,
+          comments: [],
+          createdBy: context.user._id,
         });
 
-        return workout;
+        const findWorkout = await Workout.findById(workout._id).populate({
+          path: "exercises.exercise",
+          populate: {
+            path: "category",
+          },
+        });
+        // console.log(findWorkout);
+        return findWorkout;
       }
       throw new AuthenticationError("Not logged in");
     },
-    addComment: async (parent, { workoutId, commentText, commentAuthor }) => {
-      return Workout.findOneAndUpdate(
-        { _id: workoutId },
-        {
-          $addToSet: { comments: { commentText, commentAuthor } },
-        },
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
-    },
-    updateExercise: async (parent, args, context) => {
+    addComment: async (parent, { workoutId, commentText }, context) => {
       if (context.user) {
-        return await Exercise.findByIdAndUpdate(Exercise._id, args, {
-          new: true,
-        });
+        return await Workout.findOneAndUpdate(
+          { _id: workoutId },
+          {
+            $push: {
+              comments: { commentText, commentAuthor: context.user._id },
+            },
+          },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
       }
       throw new AuthenticationError("Not logged in");
     },
-    updateCategory: async (parent, args, context) => {
+    updateExercise: async (
+      parent,
+      { exerciseId, exerciseName, description, category },
+      context
+    ) => {
       if (context.user) {
-        return await Category.findByIdAndUpdate(Category._id, args, {
-          new: true,
-        });
+        return await Exercise.findByIdAndUpdate(
+          exerciseId,
+          { exerciseName, description, category },
+          {
+            new: true,
+          }
+        );
+      }
+      throw new AuthenticationError("Not logged in");
+    },
+    updateCategory: async (parent, { categoryName, categoryId }, context) => {
+      if (context.user) {
+        return await Category.findByIdAndUpdate(
+          categoryId,
+          {
+            categoryName,
+          },
+          {
+            new: true,
+          }
+        );
       }
       throw new AuthenticationError("Not logged in");
     },
     updateWorkout: async (parent, args, context) => {
       if (context.user) {
-        return await Workout.findByIdAndUpdate(Workout._id, args, {
+        return await Workout.findByIdAndUpdate(args.workoutId, args, {
           new: true,
         });
+      }
+      throw new AuthenticationError("Not logged in");
+    },
+    removeCategory: async (_, args, context) => {
+      if (context.user) {
+        await Category.findByIdAndRemove(args.categoryId);
+
+        await Exercise.deleteMany({ category: args.categoryId });
+
+        return "Category deleted successfully.";
+      }
+      throw new AuthenticationError("Not logged in");
+    },
+    removeWorkout: async (_, args, context) => {
+      if (context.user) {
+        await Workout.findByIdAndRemove(args.workoutId);
+
+        return "Workout deleted successfully.";
       }
       throw new AuthenticationError("Not logged in");
     },
