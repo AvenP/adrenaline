@@ -1,1 +1,52 @@
-[{}]
+[
+  {
+    "exerciseName": "Jogging",
+    "description": "",
+    "category": "Cardio"
+  },
+  {
+    "exerciseName": "Walking",
+    "description": "",
+    "category": "Cardio"
+  },
+  {
+    "exerciseName": "Running",
+    "description": "",
+    "category": "Cardio"
+  },
+  {
+    "exerciseName": "Rowing",
+    "description": "",
+    "category": "Cardio"
+  },
+  {
+    "exerciseName": "Chest Press",
+    "description": "",
+    "category": "Weight Training"
+  },
+  {
+    "exerciseName": "Squat",
+    "description": "Place feet shoulder width apart and descend by breaking at the hips and sitting backwards. Keep head, back and spine, in a straight and neutral position. Descend to the bottom where thighs are parallel to the floor. Push through the heel and middle foot to bring yourself back to starting position.",
+    "category": "Lower Body"
+  },
+  {
+    "exerciseName": "Warrior II",
+    "description": "",
+    "category": "Yoga"
+  },
+  {
+    "exerciseName": "",
+    "description": "",
+    "category": ""
+  },
+  {
+    "exerciseName": "",
+    "description": "",
+    "category": ""
+  },
+  {
+    "exerciseName": "",
+    "description": "",
+    "category": ""
+  }
+]
