@@ -109,7 +109,7 @@ const resolvers = {
     addExercise: async (parent, args, context) => {
       if (context.user) {
         const exercise = await Exercise.create(args); //check returned data
-
+        console.log("addexcercise", args);
         // addExercise: async (parent, args, context) => {
         //   if (context.user) {
         //     const { exerciseName, description, category, categoryName } = args;

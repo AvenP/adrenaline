@@ -44,9 +44,9 @@ export const ADD_WORKOUT = gql`
 
 export const ADD_EXERCISE = gql`
   mutation addExercise(
-    $exerciseName: String
+    $exerciseName: String!
     $description: String
-    $category: ID
+    $category: ID!
   ) {
     addExercise(
       exerciseName: $exerciseName
@@ -59,7 +59,14 @@ export const ADD_EXERCISE = gql`
         _id
         categoryName
       }
-      # comment
+    }
+  }
+`;
+
+export const ADD_CATEGORY = gql`
+  mutation addCategory($categoryName: String!) {
+    addCategory(categoryName: $categoryName) {
+      categoryName
     }
   }
 `;

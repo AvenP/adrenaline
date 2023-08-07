@@ -1,10 +1,10 @@
-import React from 'react';
-import { useQuery } from '@apollo/client';
+import React from "react";
+import { useQuery } from "@apollo/client";
 
-import WorkoutList from '../components/WorkoutList';
-import WorkoutForm from '../components/WorkoutForm';
+import WorkoutList from "../components/WorkoutList";
+import WorkoutForm from "../components/WorkoutForm";
 
-import { QUERY_WORKOUTS } from '../utils/queries';
+import { QUERY_WORKOUTS } from "../utils/queries";
 
 const Home = () => {
   const { loading, data } = useQuery(QUERY_WORKOUTS);
@@ -15,10 +15,11 @@ const Home = () => {
       <div className="flex-row justify-center">
         <div
           className="col-12 col-md-10 mb-3 p-3"
-          style={{ border: '1px dotted #1a1a1a' }}
+          style={{ border: "1px dotted #1a1a1a" }}
         >
           <WorkoutForm />
         </div>
+
         <div className="col-12 col-md-8 mb-3">
           {loading ? (
             <div>Loading...</div>
