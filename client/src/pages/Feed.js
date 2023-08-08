@@ -1,38 +1,41 @@
-import React from "react";
+// import Link from "react-router-dom";
 
-const feed = () => {
-  function handleSubmit(e) {
-    e.preventDefault();
+import Auth from "../utils/auth";
 
-    const form = e.target;
-    const formData = new FormData(form);
-
-    const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson);
-  }
-
+const Feed = () => {
   return (
-    <form method="post" onSubmit={handleSubmit}>
-      <label className="col-12">
-        Feed title:
-        <br />
-        <input name="postTitle" defaultValue="New Post" />
-      </label>
-      <label className="col-12">
-        Edit your post:
-        <br />
-        <textarea
-          name="postContent"
-          defaultValue="Add Your Post!"
-          rows={4}
-          cols={40}
-        />
-      </label>
-      <hr />
-      <button type="reset">Reset post</button>
-      <button type="submit">Save post</button>
-    </form>
+    <div className="flex-row justify-center justify-space-between-md align-center">
+      {Auth.loggedIn() ? <h3>Feed</h3> : <p></p>}
+    </div>
   );
 };
 
-export default feed;
+export default Feed;
+
+//         <form
+//           className="flex-row justify-center justify-space-between-md align-center"
+//           onSubmit={handleSubmit}
+//         >
+//           <div className="col-12">
+//             <label htmlFor="postTitle">Feed title:</label>
+//             <input
+//               type="text"
+//               className="form-input"
+//               name="postTitle"
+//               defaultValue="New Post"
+//             />
+//           </div>
+
+//           <div className="col-12">
+//             <label htmlFor="postContent">Edit your post:</label>
+//             <textarea
+//               name="postContent"
+//               defaultValue="Add Your Post!"
+//               className="form-input w-100"
+//               style={{ lineHeight: "1.5", resize: "vertical" }}
+//             />
+//           </div>
+//           <hr />
+//           <button type="reset">Reset post</button>
+//           <button type="submit">Save post</button>
+//         </form>
