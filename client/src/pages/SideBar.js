@@ -8,7 +8,7 @@ const SideBar = () => {
       {Auth.loggedIn() ? (
         <div className="display-flex flex-column">
           <div>
-            <Link className="btn btn-lg btn-success m-2" to="/AddContent">
+            <Link className="btn btn-lg btn-success m-2" to="/AddExercise">
               Add Exercises
             </Link>
           </div>

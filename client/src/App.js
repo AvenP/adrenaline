@@ -14,7 +14,7 @@ import Login from "./pages/Login";
 // import Profile from "./pages/Profile";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import AddContent from "./pages/AddContent";
+import AddExercise from "./pages/AddExercise";
 import ProfilePage from "./pages/ProfilePage";
 import AddCategory from "./pages/AddCategory";
 import AllWorkout from "./pages/AllWorkouts";
@@ -55,9 +55,7 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) =>
-        (prevIndex + 1) % imageUrls.length
-      );
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageUrls.length);
     }, 30000); // 30 seconds
 
     return () => {
@@ -88,7 +86,7 @@ function App() {
               <Route path="/add-workouts" element={<AddWorkout />} />
               <Route path="/workouts" element={<AllWorkout />} />
               <Route path="/exercise" element={<AllExercises />} />
-              <Route path="/AddContent" element={<AddContent />} />
+              <Route path="/AddExercise" element={<AddExercise />} />
               <Route path="/AddCategory" element={<AddCategory />} />
             </Routes>
           </div>
