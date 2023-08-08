@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 const WorkoutList = ({
   workouts,
@@ -11,6 +11,25 @@ const WorkoutList = ({
     return <h3>No WORKOUTS Yet?? Nerd</h3>;
   }
 
+  const createWorkoutText = (workout) => {
+    let workoutText = "";
+    for (const workoutExercise of workout.exercises) {
+      // Create an exercise item with the selected exercise and rest time
+      let exerciseItem = `${workoutExercise.exercise.exerciseName} - Rest Time: ${workoutExercise.restTime}`;
+
+      // Append the rep duration to the exercise item if specified
+      if (workoutExercise.repDuration && !workoutExercise.untilFailure) {
+        exerciseItem += ` - Reps: ${workoutExercise.repDuration} -  Total Sets:: ${workoutExercise.totalSets} - Reps. Per Set: ${workoutExercise.repsPerSet}`;
+      } else if (workoutExercise.untilFailure) {
+        exerciseItem += " - Reps: Until Failure";
+      }
+
+      // Append a new line character to separate exercises
+      workoutText += exerciseItem + "\n";
+    }
+    return workoutText;
+  };
+
   return (
     <div>
       {showTitle && <h3>{title}</h3>}
@@ -19,15 +38,13 @@ const WorkoutList = ({
           <div key={workout._id} className="card mb-3">
             <h4 className="card-header bg-primary text-light p-2 m-0">
               {showUsername ? (
-                <Link
-                  className="text-light"
-                  to={`/profiles/${workout.workoutAuthor}`}
-                >
-                  {workout.workoutAuthor} <br />
+                <div className="text-light">
+                  {workout.createdBy.username} - {workout.workoutName} <br />
                   <span style={{ fontSize: "1rem" }}>
-                    had this thought on these GAINZZZZ {workout.createdAt}
+                    {workout.createdBy.username} created these GAINZZZZ on{" "}
+                    {workout.createdAt}
                   </span>
-                </Link>
+                </div>
               ) : (
                 <>
                   <span style={{ fontSize: "1rem" }}>
@@ -37,14 +54,14 @@ const WorkoutList = ({
               )}
             </h4>
             <div className="card-body bg-light p-2">
-              <p>{workout.workoutText}</p>
+              <p>{createWorkoutText(workout)}</p>
             </div>
-            <Link
+            {/* <Link
               className="btn btn-primary btn-block btn-squared"
               to={`/workouts/${workout._id}`}
             >
               Join the discussion on these MAD GAINSZZZZZ.
-            </Link>
+            </Link> */}
           </div>
         ))}
     </div>

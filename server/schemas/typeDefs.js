@@ -41,7 +41,8 @@ const typeDefs = gql`
     workoutName: String
     description: String
     createdAt: String
-    exercises: [Exercise]
+    createdBy: User
+    exercises: [WorkoutExercise]
     comments: [Comment]
     # reactions: [Reaction]
   }
@@ -76,7 +77,7 @@ const typeDefs = gql`
     addWorkout(
       workoutName: String
       description: String
-      exercises: [ID]!
+      exercises: [WorkoutExerciseInput]!
     ): Workout
     addComment(
       workoutId: ID!
