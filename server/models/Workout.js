@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const Exercise = require("./Exercise");
+const dateFormat = require("../utils/dateFormat");
 
 const workoutSchema = new Schema({
   createdBy: { type: Schema.Types.ObjectId, ref: "User" },
@@ -9,7 +10,7 @@ const workoutSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    // get: (timestamp) => dateFormat(timestamp),
+    get: (timestamp) => dateFormat(timestamp),
   },
   exercises: [
     {
@@ -49,7 +50,7 @@ const workoutSchema = new Schema({
       createdAt: {
         type: Date,
         default: Date.now,
-        // get: (timestamp) => dateFormat(timestamp),
+        get: (timestamp) => dateFormat(timestamp),
       },
     },
   ],

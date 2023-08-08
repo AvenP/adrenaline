@@ -59,20 +59,16 @@ const WorkoutForm = () => {
     },
   });
 
-  // const addExercise = () => {
-  //   console.log(selectedExercise);
-  //   const exerciseObj = exercises.find(
-  //     (e) => e._id === selectedExercise.exercise.value
-  //   );
-  //   setWorkoutList([...workoutList, exerciseObj]);
-  // };
-
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    // const exerciseObj = exercises.find(
+    //   (e) => e._id === selectedExercise.exercise.value
+    // );
+
     setExerciseArray((prev) => [
       ...prev,
       {
-        exercise: selectedExercise,
+        exercise: selectedExercise.exercise.value,
         restTime: selectedRestTime,
         repDuration,
         untilFailure,
@@ -81,7 +77,7 @@ const WorkoutForm = () => {
       },
     ]);
     // Create a new exercise item with the selected exercise and rest time
-    let exerciseItem = `Rest Time: ${selectedRestTime}`;
+    let exerciseItem = `${selectedExercise.exercise.label} - Rest Time: ${selectedRestTime}`;
 
     // Append the rep duration to the exercise item if specified
     if (repDuration && !untilFailure) {
@@ -106,7 +102,8 @@ const WorkoutForm = () => {
     setSelectedRestTime("");
     setRepDuration("");
     setUntilFailure(false);
-    console.log(workoutList);
+    console.log(selectedExercise, exerciseArray);
+
     console.log("form submitted");
   };
 

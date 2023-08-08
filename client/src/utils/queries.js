@@ -99,6 +99,10 @@ export const QUERY_WORKOUTS = gql`
       exercises {
         _id
         repsPerSet
+        totalSets
+        untilFailure
+        repDuration
+        restTime
         exercise {
           _id
           category {
