@@ -20,13 +20,20 @@ const WorkoutForm = () => {
     category: null,
     exercise: null,
   });
+  const [selectedRestTime, setSelectedRestTime] = useState("");
   const [workoutList, setWorkoutList] = useState([]);
-
+  const [repDuration, setRepDuration] = useState("");
+  const [totalSets, setTotalSets] = useState(0);
+  const [repsPerSet, setRepsPerSet] = useState(0);
+  const [untilFailure, setUntilFailure] = useState(false);
+  const [exerciseArray, setExerciseArray] = useState([]);
   const [characterCount, setCharacterCount] = useState(0);
+
   const { data: exerciseData } = useQuery(QUERY_EXERCISES);
   const { data: categoryData } = useQuery(QUERY_CATEGORIES);
   const categories = categoryData?.categories || [];
   const exercises = exerciseData?.exercises || [];
+
   const getExercises = (categoryId) =>
     exercises.filter((exercise) => exercise.category._id === categoryId) || [];
 
@@ -52,18 +59,68 @@ const WorkoutForm = () => {
     },
   });
 
-  const addExercise = () => {
-    console.log(selectedExercise);
-    const exerciseObj = exercises.find(
-      (e) => e._id === selectedExercise.exercise.value
-    );
-    setWorkoutList([...workoutList, exerciseObj]);
-  };
+  // const addExercise = () => {
+  //   console.log(selectedExercise);
+  //   const exerciseObj = exercises.find(
+  //     (e) => e._id === selectedExercise.exercise.value
+  //   );
+  //   setWorkoutList([...workoutList, exerciseObj]);
+  // };
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    setExerciseArray((prev) => [
+      ...prev,
+      {
+        exercise: selectedExercise,
+        restTime: selectedRestTime,
+        repDuration,
+        untilFailure,
+        repsPerSet,
+        totalSets,
+      },
+    ]);
+    // Create a new exercise item with the selected exercise and rest time
+    let exerciseItem = `Rest Time: ${selectedRestTime}`;
+
+    // Append the rep duration to the exercise item if specified
+    if (repDuration && !untilFailure) {
+      exerciseItem += ` - Reps: ${repDuration} -  Total Sets:: ${totalSets} - Reps. Per Set: ${repsPerSet}`;
+    } else if (untilFailure) {
+      exerciseItem += " - Reps: Until Failure";
+    }
+
+    // Append a new line character to separate exercises
+    exerciseItem += "\n";
+
+    // Update the workout list with the new exercise item
+    setWorkoutList([...workoutList, exerciseItem]);
+
+    // Update the workout text with the complete workout list
+    setWorkoutText(workoutText + exerciseItem);
+    // Clear the selected exercise, rest time, rep duration, and untilFailure
+    setRepsPerSet("");
+    setWorkoutName("");
+    setTotalSets("");
+    setSelectedExercise("");
+    setSelectedRestTime("");
+    setRepDuration("");
+    setUntilFailure(false);
     console.log(workoutList);
     console.log("form submitted");
+  };
+
+  const handleWorkout = async (event) => {
+    event.preventDefault();
+    await addWorkout({
+      variables: {
+        workoutName,
+        exercises: exerciseArray,
+      },
+    });
+    setExerciseArray([]);
+    setWorkoutName("");
+    setWorkoutList([]);
   };
 
   useEffect(() => {
@@ -136,42 +193,101 @@ const WorkoutForm = () => {
               />
             </div>
 
+            <div className="col-12 col-lg-3">
+              <label htmlFor="restTime">Rest Time:</label>
+              <select
+                name="restTime"
+                value={selectedRestTime}
+                className="form-input"
+                onChange={(e) => setSelectedRestTime(e.target.value)}
+              >
+                <option value="">Select rest time</option>
+                <option value="1 minute">1 minute</option>
+                <option value="5 minutes">5 minutes</option>
+                <option value="10 minutes">10 minutes</option>
+                <option value="until failure">Until Failure</option>
+              </select>
+            </div>
+
+            <div className="col-12 col-lg-3">
+              <label htmlFor="repDuration">Rep Duration:</label>
+              <div className="flex-row">
+                <input
+                  type="number"
+                  name="repDuration"
+                  placeholder="Enter rep duration"
+                  value={repDuration}
+                  className="form-input"
+                  onChange={(e) => {
+                    setUntilFailure(false);
+                    setRepDuration(e.target.value);
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="col-4">
+              <label htmlFor="category">Total Sets:</label>
+              <br />
+              <input
+                className="form-input"
+                type="number"
+                placeholder="Total Sets"
+                name="totalSets"
+                value={totalSets}
+                onChange={(e) => setTotalSets(e.target.value)}
+              />
+            </div>
+            <div className="col-4">
+              <label htmlFor="category">Reps. Per Set:</label>
+              <br />
+              <input
+                className="form-input"
+                type="number"
+                placeholder="Reps. Per Set"
+                name="repsPerSet"
+                value={repsPerSet}
+                onChange={(e) => setRepsPerSet(e.target.value)}
+              />
+            </div>
+            <div className="col-4">
+              <label htmlFor="untilFailure">Until Failure:&nbsp;</label>
+              <input
+                type="checkbox"
+                name="untilFailure"
+                checked={untilFailure}
+                onChange={(e) => {
+                  setUntilFailure(e.target.checked);
+                  setRepDuration("");
+                }}
+              />
+            </div>
             <div className="col-12 col-lg-3 mt-2">
               <button
                 className="btn btn-primary btn-block py-3"
                 type="button"
                 disabled={!selectedExercise?.exercise}
-                onClick={addExercise}
+                onClick={handleFormSubmit}
               >
                 Add Exercise to workout
               </button>
             </div>
-
-            <div className="col-12 mt-2 ">
-              <h4>Workout List: </h4>
-              <ol className="workoutList">
-                {workoutList?.map((exercise, index) => (
-                  <li key={index}>{exercise.exerciseName}</li>
-                ))}
-              </ol>
+            <div className="col-12">
+              <textarea
+                name="workoutText"
+                placeholder="Complete Workout List"
+                value={workoutText}
+                className="form-input w-100"
+                style={{ lineHeight: "1.5", resize: "vertical" }}
+                onChange={(e) => setWorkoutText(e.target.value)}
+              ></textarea>
             </div>
-
             <div className="col-12 col-lg-3">
-              <label>Description: </label>
-              <div className="flex-row">
-                <textarea
-                  type="text"
-                  id="description"
-                  name="description"
-                  // value={formData.description}
-                  // onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div className="col-12 col-lg-3 mt-2">
-              <button className="btn btn-primary btn-block py-3" type="submit">
-                Submit Workout
+              <button
+                className="btn btn-primary btn-block py-3"
+                onClick={handleWorkout}
+              >
+                Add Workout
               </button>
             </div>
           </form>
