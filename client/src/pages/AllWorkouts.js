@@ -1,13 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import SideBar from "./SideBar";
-import CategoryForm from "../components/CategoryForm";
 import { useQuery } from "@apollo/client";
 import { QUERY_WORKOUTS } from "../utils/queries";
 import WorkoutList from "../components/WorkoutList";
 
-const AddCategory = () => {
-    const { loading, data } = useQuery(QUERY_WORKOUTS);
+const AllWorkouts = () => {
+  const { loading, data } = useQuery(QUERY_WORKOUTS);
   const workouts = data?.workouts || [];
   return (
     <div>
@@ -33,4 +32,4 @@ const AddCategory = () => {
   );
 };
 
-export default AddCategory;
+export default AllWorkouts;

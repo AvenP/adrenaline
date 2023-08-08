@@ -29,7 +29,7 @@ const SideBar = () => {
           </div>
           <div>
             <Link className="btn btn-lg btn-success m-2" to="/workouts">
-              All Workout
+              All Workouts
             </Link>
           </div>
         </div>

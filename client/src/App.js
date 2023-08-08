@@ -17,12 +17,10 @@ import Footer from "./components/Footer";
 import AddContent from "./pages/AddContent";
 import ProfilePage from "./pages/ProfilePage";
 import AddCategory from "./pages/AddCategory";
-// import WorkoutDetail from "./pages/WorkoutDetail";
-// import Workout from "./pages/Workout";
-import AllWorkout from "./pages/AllWorkout";
+import AllWorkout from "./pages/AllWorkouts";
 import AllExercises from "./pages/AllExercises";
 import AddWorkout from "./pages/AddWorkout";
-import Support from "./pages/Support";
+// import Support from "./pages/Support";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -56,7 +54,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/me" element={<ProfilePage />} />
-              <Route path="/Support" element={<Support />} />
+              {/* <Route path="/Support" element={<Support />} /> */}
               <Route path="/add-workouts" element={<AddWorkout />} />
               <Route path="/workouts" element={<AllWorkout />} />
               <Route path="/exercise" element={<AllExercises />} />

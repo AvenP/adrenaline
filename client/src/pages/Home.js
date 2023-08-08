@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 
 import WorkoutList from "../components/WorkoutList";
 import WorkoutForm from "../components/WorkoutForm";
+import Feed from "./Feed";
 
 import { QUERY_WORKOUTS } from "../utils/queries";
 
@@ -19,7 +20,12 @@ const Home = () => {
         >
           <WorkoutForm />
         </div>
-
+        <div
+          className="col-12 col-md-10"
+          style={{ border: "1px dotted #1a1a1a" }}
+        >
+          <Feed />
+        </div>
         <div className="col-12 col-md-8 mb-3">
           {loading ? (
             <div>Loading...</div>

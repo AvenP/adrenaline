@@ -142,20 +142,6 @@ const WorkoutForm = () => {
             className="flex-row justify-center justify-space-between-md align-center"
             onSubmit={handleFormSubmit}
           >
-            <div className="col-12 col-lg-3">
-              <label htmlFor="workoutName">Workout Name:</label>
-              <div className="flex-row">
-                <input
-                  type="text"
-                  name="workoutName"
-                  placeholder="Enter Workout Name"
-                  value={workoutName}
-                  className="form-input"
-                  onChange={(e) => setWorkoutName(e.target.value)}
-                />
-              </div>
-            </div>
-
             <div className="col-12 col-lg-12">
               <label htmlFor="category">Select a Category:</label>
               <Select
@@ -238,6 +224,7 @@ const WorkoutForm = () => {
                 onChange={(e) => setTotalSets(e.target.value)}
               />
             </div>
+
             <div className="col-4">
               <label htmlFor="category">Reps. Per Set:</label>
               <br />
@@ -250,6 +237,7 @@ const WorkoutForm = () => {
                 onChange={(e) => setRepsPerSet(e.target.value)}
               />
             </div>
+
             <div className="col-4">
               <label htmlFor="untilFailure">Until Failure:&nbsp;</label>
               <input
@@ -262,6 +250,7 @@ const WorkoutForm = () => {
                 }}
               />
             </div>
+
             <div className="col-12 col-lg-3 mt-2">
               <button
                 className="btn btn-primary btn-block py-3"
@@ -272,6 +261,7 @@ const WorkoutForm = () => {
                 Add Exercise to workout
               </button>
             </div>
+
             <div className="col-12">
               <textarea
                 name="workoutText"
@@ -282,6 +272,21 @@ const WorkoutForm = () => {
                 onChange={(e) => setWorkoutText(e.target.value)}
               ></textarea>
             </div>
+
+            <div className="col-12 col-lg-3">
+              <label htmlFor="workoutName">Workout Name:</label>
+              <div className="flex-row">
+                <input
+                  type="text"
+                  name="workoutName"
+                  placeholder="Enter Workout Name"
+                  value={workoutName}
+                  className="form-input"
+                  onChange={(e) => setWorkoutName(e.target.value)}
+                />
+              </div>
+            </div>
+
             <div className="col-12 col-lg-3">
               <button
                 className="btn btn-primary btn-block py-3"
