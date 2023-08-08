@@ -27,6 +27,13 @@ const Footer = () => {
           </span>{' '}
           by the ADRENALINE team.
         </h4>
+        <nav>
+          <h4>
+            Contact Us
+          </h4>
+        <a href="mailto:Philippwinston@gmail.com">Email us if you NEED HELP WITH GAINSSSZZZZ</a>
+
+      </nav>
       </div>
     </footer>
   );
