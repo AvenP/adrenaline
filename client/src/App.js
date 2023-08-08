@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   ApolloClient,
   InMemoryCache,
@@ -43,10 +43,41 @@ const client = new ApolloClient({
 });
 
 function App() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const imageUrls = [
+    "/images/gym1.jpg",
+    "/images/gym2.jpg",
+    "/images/gym3.jpg",
+    "/images/gym4.jpg",
+    "/images/gym5.jpg",
+    // Add more image URLs here
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) =>
+        (prevIndex + 1) % imageUrls.length
+      );
+    }, 30000); // 30 seconds
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [imageUrls.length]);
+
+  const currentImageUrl = imageUrls[currentImageIndex];
   return (
     <ApolloProvider client={client}>
       <Router>
-        <div className="flex-column justify-flex-start min-100-vh">
+        <div
+          className="flex-column justify-flex-start min-100-vh"
+          style={{
+            backgroundImage: `url(${currentImageUrl})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            transition: "background-image 1s ease-in-out",
+          }}
+        >
           <Header />
           <div className="container">
             <Routes>
@@ -54,11 +85,9 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/me" element={<ProfilePage />} />
-              {/* <Route path="/Support" element={<Support />} /> */}
               <Route path="/add-workouts" element={<AddWorkout />} />
               <Route path="/workouts" element={<AllWorkout />} />
               <Route path="/exercise" element={<AllExercises />} />
-              {/* <Route path="/profiles/:username" element={<Profile />} /> */}
               <Route path="/AddContent" element={<AddContent />} />
               <Route path="/AddCategory" element={<AddCategory />} />
             </Routes>

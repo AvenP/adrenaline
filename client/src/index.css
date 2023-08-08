@@ -1226,6 +1226,7 @@ label form [type='radio'] {
 
 .justify-center {
   justify-content: center;
+  background-color: #dd993c;
 }
 
 .align-start {
